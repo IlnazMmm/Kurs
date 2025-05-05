@@ -2,15 +2,28 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:viewModels="clr-namespace:Kurs.ViewModels"
              x:Class="Kurs.Views.WorkTypePage"
-             Title="Типы работ">
+             Title="Виды работ">
+
+    <ContentPage.Resources>
+        <ResourceDictionary>
+            <Style TargetType="Entry">
+                <Setter Property="FontSize" Value="16" />
+            </Style>
+        </ResourceDictionary>
+    </ContentPage.Resources>
 
     <ContentPage.BindingContext>
         <viewModels:WorkTypeViewModel />
     </ContentPage.BindingContext>
 
     <VerticalStackLayout Padding="10" Spacing="10">
-        <Entry Text="{Binding SelectedWorkType.Description}" Placeholder="Описание" />
-        <Entry Text="{Binding SelectedWorkType.RatePerDay}" Placeholder="Ставка в день" Keyboard="Numeric" />
+        <Entry Text="{Binding SelectedWorkType.Description}" Placeholder="Описание работы" />
+
+        <Entry Text="{Binding SelectedWorkType.RatePerDay}"
+               Placeholder="Ставка за день"
+               Keyboard="Numeric" TextChanged="OnRatePerDayTextChanged" />
+        <Label Text="{Binding RateError}" TextColor="Red" FontSize="12"
+               IsVisible="{Binding RateError, Converter={StaticResource StringNotEmptyConverter}}" />
 
         <Button Text="Сохранить" Command="{Binding SaveCommand}" />
 
@@ -19,8 +32,8 @@
                 <DataTemplate>
                     <ViewCell>
                         <StackLayout Orientation="Horizontal" Padding="5" Spacing="10">
-                            <Label Text="{Binding Description}" VerticalOptions="Center" WidthRequest="150" />
-                            <Label Text="{Binding RatePerDay}" VerticalOptions="Center" WidthRequest="80" />
+                            <Label Text="{Binding Description}" VerticalOptions="Center" WidthRequest="180"/>
+                            <Label Text="{Binding RatePerDay}" VerticalOptions="Center" WidthRequest="80"/>
                             <Button Text="Редактировать"
                                     Command="{Binding BindingContext.EditCommand, Source={RelativeSource AncestorType={x:Type ContentPage}}}"
                                     CommandParameter="{Binding}" />
