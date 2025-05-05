@@ -50,5 +50,7 @@ namespace Kurs.Services
         public int DaysWorked { get; set; }
         public decimal TotalPay { get; set; }
         public List<string> WorkDetails { get; set; } = new();
+            
+        public string WorkDetailsString => string.Join(", ", WorkDetails);
     }
 }
