@@ -1,4 +1,3 @@
-using System.Collections;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
@@ -11,6 +10,8 @@ namespace Kurs.ViewModels
     public class WorkAssignmentViewModel : BaseViewModel
     {
         public ObservableCollection<Employee> Employees { get; } = new();
+        private List<Employee> _allEmployees = new();
+
         public ObservableCollection<WorkType> WorkTypes { get; } = new();
 
         private WorkType _selectedWorkType;
@@ -21,6 +22,18 @@ namespace Kurs.ViewModels
             {
                 _selectedWorkType = value;
                 OnPropertyChanged(nameof(SelectedWorkType));
+            }
+        }
+
+        private string _searchQuery;
+        public string SearchQuery
+        {
+            get => _searchQuery;
+            set
+            {
+                _searchQuery = value;
+                OnPropertyChanged(nameof(SearchQuery));
+                FilterEmployees();
             }
         }
 
@@ -41,21 +54,17 @@ namespace Kurs.ViewModels
             if (SelectedWorkType == null || !selected.Any())
                 return;
 
-            // Назначаем работу для каждого выбранного сотрудника
-            foreach (var obj in selected)
+            foreach (var employee in selected)
             {
-                if (obj is Employee employee)
+                var work = new ExtraWork
                 {
-                    var work = new ExtraWork
-                    {
-                        EmployeeId = employee.Id,
-                        WorkTypeId = SelectedWorkType.Id,
-                        StartDate = StartDate,
-                        EndDate = EndDate
-                    };
+                    EmployeeId = employee.Id,
+                    WorkTypeId = SelectedWorkType.Id,
+                    StartDate = StartDate,
+                    EndDate = EndDate
+                };
 
-                    await App.Database.AddExtraWorkAsync(work);
-                }
+                await App.Database.AddExtraWorkAsync(work);
             }
 
             await App.Current.MainPage.DisplayAlert("Готово", "Работа назначена для выбранных сотрудников", "OK");
@@ -63,14 +72,30 @@ namespace Kurs.ViewModels
 
         public async Task LoadAsync()
         {
-            Employees.Clear();
-            foreach (var e in await App.Database.GetEmployeesAsync())
-                Employees.Add(e);
+            _allEmployees = (await App.Database.GetEmployeesAsync()).ToList();
+            FilterEmployees();
 
             WorkTypes.Clear();
             foreach (var t in await App.Database.GetWorkTypesAsync())
                 WorkTypes.Add(t);
         }
+
+        private void FilterEmployees()
+        {   
+            Employees.Clear();  
+
+            var filtered = string.IsNullOrWhiteSpace(SearchQuery)
+                ? _allEmployees
+                : _allEmployees.Where(e =>
+                    e.FullName.Contains(SearchQuery, StringComparison.OrdinalIgnoreCase)).ToList();
+
+            var topThree = filtered.Take(3).ToList();
+
+            Employees.Clear();
+            foreach (var emp in topThree)
+                Employees.Add(emp);
+        }
+
         public event PropertyChangedEventHandler PropertyChanged;
         void OnPropertyChanged(string name) => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
     }
