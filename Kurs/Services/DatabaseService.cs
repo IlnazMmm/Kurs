@@ -23,32 +23,39 @@ namespace Kurs
         public Task<List<ExtraWork>> GetExtraWorksAsync() => _db.Table<ExtraWork>().ToListAsync();
 
         public Task<int> AddEmployeeAsync(Employee emp) => _db.InsertAsync(emp);
+        public Task<int> UpdateEmployeeAsync(Employee emp) => _db.UpdateAsync(emp);
+        public Task<int> DeleteEmployeeAsync(Employee emp) => _db.DeleteAsync(emp);
+
         public Task<int> AddWorkTypeAsync(WorkType type) => _db.InsertAsync(type);
+        public Task<int> UpdateWorkTypeAsync(WorkType type) => _db.UpdateAsync(type);
+        public Task<int> DeleteWorkTypeAsync(WorkType type) => _db.DeleteAsync(type);
+
         public Task<int> AddExtraWorkAsync(ExtraWork work) => _db.InsertAsync(work);
-        public async Task<int> UpdateEmployeeAsync(Employee emp)
-        {
-            if (emp == null)
-                return 0;
+        //    public async Task<int> UpdateEmployeeAsync(Employee emp)
+        //    {
+        //        if (emp == null)
+        //            return 0;
 
-            // Проверяем, существует ли сотрудник
-            var existingEmployee = await _db.Table<Employee>().Where(e => e.Id == emp.Id).FirstOrDefaultAsync();
-            if (existingEmployee != null)
-            {
-                // Если сотрудник существует, обновляем его
-                return await _db.UpdateAsync(emp);
-            }
+        //        // Проверяем, существует ли сотрудник
+        //        var existingEmployee = await _db.Table<Employee>().Where(e => e.Id == emp.Id).FirstOrDefaultAsync();
+        //        if (existingEmployee != null)
+        //        {
+        //            // Если сотрудник существует, обновляем его
+        //            return await _db.UpdateAsync(emp);
+        //        }
 
-            return 0;
-        }
+        //        return 0;
+        //    }
 
-        // Удалить сотрудника
-        public async Task<int> DeleteEmployeeAsync(Employee emp)
-        {
-            if (emp == null)
-                return 0;
+        //    // Удалить сотрудника
+        //    public async Task<int> DeleteEmployeeAsync(Employee emp)
+        //    {
+        //        if (emp == null)
+        //            return 0;
 
-            // Удаляем сотрудника по Id
-            return await _db.DeleteAsync(emp);
-        }
+        //        // Удаляем сотрудника по Id
+        //        return await _db.DeleteAsync(emp);
+        //    }
+        //}
     }
 }

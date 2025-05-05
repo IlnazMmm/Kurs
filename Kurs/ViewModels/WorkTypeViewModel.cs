@@ -1,62 +1,80 @@
 using System.Collections.ObjectModel;
+using System.ComponentModel;
+using System.Runtime.CompilerServices;
 using System.Windows.Input;
 using Kurs.Models;
 using Kurs.Services;
 
 namespace Kurs.ViewModels
 {
-    public class WorkTypeViewModel : BaseViewModel
+    public class WorkTypeViewModel : INotifyPropertyChanged
     {
-        public ObservableCollection<WorkType> WorkTypes { get; } = new();
+        public ObservableCollection<WorkType> WorkTypes { get; set; } = new();
 
-        private string _description;
-        public string Description
+        private WorkType _selectedWorkType = new WorkType();
+        public WorkType SelectedWorkType
         {
-            get => _description;
-            set => SetProperty(ref _description, value);
-        }
-
-        private string _ratePerDay;
-        public string RatePerDay
-        {
-            get => _ratePerDay;
-            set => SetProperty(ref _ratePerDay, value);
+            get => _selectedWorkType;
+            set
+            {
+                _selectedWorkType = value;
+                OnPropertyChanged();
+            }
         }
 
         public ICommand SaveCommand { get; }
+        public ICommand DeleteCommand { get; }
+        public ICommand EditCommand { get; }
 
         public WorkTypeViewModel()
         {
             SaveCommand = new Command(async () => await SaveAsync());
+            DeleteCommand = new Command<WorkType>(async (type) => await DeleteAsync(type));
+            EditCommand = new Command<WorkType>((type) => Edit(type));
+
             LoadAsync();
-        }
-
-        private async Task SaveAsync()
-        {
-            if (!decimal.TryParse(RatePerDay, out var rate)) return;
-
-            var workType = new WorkType
-            {
-                Description = Description,
-                RatePerDay = rate
-            };
-
-            await App.Database.AddWorkTypeAsync(workType);
-            await LoadAsync();
-
-            Description = string.Empty;
-            RatePerDay = string.Empty;
         }
 
         public async Task LoadAsync()
         {
             var list = await App.Database.GetWorkTypesAsync();
-            MainThread.BeginInvokeOnMainThread(() =>
-            {
-                WorkTypes.Clear();
-                foreach (var wt in list)
-                    WorkTypes.Add(wt);
-            });
+            WorkTypes.Clear();
+            foreach (var wt in list)
+                WorkTypes.Add(wt);
         }
+
+        public async Task SaveAsync()
+        {
+            if (string.IsNullOrWhiteSpace(SelectedWorkType.Description) || SelectedWorkType.RatePerDay <= 0)
+                return;
+
+            if (SelectedWorkType.Id == 0)
+                await App.Database.AddWorkTypeAsync(SelectedWorkType);
+            else
+                await App.Database.UpdateWorkTypeAsync(SelectedWorkType);
+
+            SelectedWorkType = new WorkType();
+            await LoadAsync();
+        }
+
+        public void Edit(WorkType wt)
+        {
+            SelectedWorkType = new WorkType
+            {
+                Id = wt.Id,
+                Description = wt.Description,
+                RatePerDay = wt.RatePerDay
+            };
+        }
+
+        public async Task DeleteAsync(WorkType wt)
+        {
+            await App.Database.DeleteWorkTypeAsync(wt);
+            await LoadAsync();
+        }
+
+        public event PropertyChangedEventHandler PropertyChanged;
+        void OnPropertyChanged([CallerMemberName] string name = null) =>
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
     }
 }
