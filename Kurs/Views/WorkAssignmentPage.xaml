@@ -1,0 +1,44 @@
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:viewModels="clr-namespace:Kurs.ViewModels"
+             x:Class="Kurs.Views.WorkAssignmentPage"
+             Title="Назначить работу">
+
+    <ContentPage.BindingContext>
+        <viewModels:WorkAssignmentViewModel />
+    </ContentPage.BindingContext>
+
+    <VerticalStackLayout Padding="10" Spacing="10">
+        <Label Text="Сотрудники" />
+
+        <CollectionView ItemsSource="{Binding Employees}">
+            <CollectionView.ItemTemplate>
+                <DataTemplate>
+                    <Grid Padding="1" ColumnDefinitions="Auto,*" VerticalOptions="Center">
+                        <CheckBox IsChecked="{Binding IsSelected, Mode=TwoWay}" 
+                              Color="DodgerBlue"
+                              VerticalOptions="Center" 
+                              Margin="10,0,0,0"
+                              HorizontalOptions="Center"/>
+                        <Label Grid.Column="1"
+                           Text="{Binding FullName}"
+                           FontSize="14"
+                           VerticalOptions="Center"
+                           Margin="5,0,0,0" />
+                    </Grid>
+                </DataTemplate>
+            </CollectionView.ItemTemplate>
+        </CollectionView>
+
+
+        <Label Text="Вид работы" />
+        <Picker ItemsSource="{Binding WorkTypes}"
+                ItemDisplayBinding="{Binding Description}"
+                SelectedItem="{Binding SelectedWorkType}" />
+
+        <DatePicker Date="{Binding StartDate}" />
+        <DatePicker Date="{Binding EndDate}" />
+
+        <Button Text="Назначить" Command="{Binding AssignCommand}" />
+    </VerticalStackLayout>
+</ContentPage>

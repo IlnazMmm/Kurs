@@ -1,0 +1,23 @@
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:viewModels="clr-namespace:Kurs.ViewModels"
+             x:Class="Kurs.Views.WorkTypePage"
+             Title="Виды Работ">
+
+    <ContentPage.BindingContext>
+        <viewModels:WorkTypeViewModel />
+    </ContentPage.BindingContext>
+
+    <VerticalStackLayout Padding="10" Spacing="10">
+        <Entry Placeholder="Описание" Text="{Binding Description}" />
+        <Entry Placeholder="Ставка в день" Keyboard="Numeric" Text="{Binding RatePerDay}" />
+        <Button Text="Сохранить" Command="{Binding SaveCommand}" />
+        <CollectionView ItemsSource="{Binding WorkTypes}">
+            <CollectionView.ItemTemplate>
+                <DataTemplate>
+                    <Label Text="{Binding Description}" />
+                </DataTemplate>
+            </CollectionView.ItemTemplate>
+        </CollectionView>
+    </VerticalStackLayout>
+</ContentPage>
