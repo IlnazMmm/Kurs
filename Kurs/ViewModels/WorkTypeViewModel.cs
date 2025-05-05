@@ -1,9 +1,9 @@
+using Kurs.Models;
+using Kurs.Services;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using System.Windows.Input;
-using Kurs.Models;
-using Kurs.Services;
 
 namespace Kurs.ViewModels
 {
@@ -22,16 +22,26 @@ namespace Kurs.ViewModels
             }
         }
 
+        private string _rateError;
+        public string RateError
+        {
+            get => _rateError;
+            set
+            {
+                _rateError = value;
+                OnPropertyChanged();
+            }
+        }
+
         public ICommand SaveCommand { get; }
-        public ICommand DeleteCommand { get; }
         public ICommand EditCommand { get; }
+        public ICommand DeleteCommand { get; }
 
         public WorkTypeViewModel()
         {
             SaveCommand = new Command(async () => await SaveAsync());
-            DeleteCommand = new Command<WorkType>(async (type) => await DeleteAsync(type));
-            EditCommand = new Command<WorkType>((type) => Edit(type));
-
+            EditCommand = new Command<WorkType>(Edit);
+            DeleteCommand = new Command<WorkType>(async (wt) => await DeleteAsync(wt));
             LoadAsync();
         }
 
@@ -39,14 +49,22 @@ namespace Kurs.ViewModels
         {
             var list = await App.Database.GetWorkTypesAsync();
             WorkTypes.Clear();
-            foreach (var wt in list)
-                WorkTypes.Add(wt);
+            foreach (var item in list)
+                WorkTypes.Add(item);
         }
 
         public async Task SaveAsync()
         {
-            if (string.IsNullOrWhiteSpace(SelectedWorkType.Description) || SelectedWorkType.RatePerDay <= 0)
+            if (string.IsNullOrWhiteSpace(SelectedWorkType?.Description))
                 return;
+
+            if (SelectedWorkType.RatePerDay <= 0)
+            {
+                RateError = "—тавка должна быть положительным числом";
+                return;
+            }
+
+            RateError = string.Empty;
 
             if (SelectedWorkType.Id == 0)
                 await App.Database.AddWorkTypeAsync(SelectedWorkType);
@@ -74,7 +92,7 @@ namespace Kurs.ViewModels
         }
 
         public event PropertyChangedEventHandler PropertyChanged;
-        void OnPropertyChanged([CallerMemberName] string name = null) =>
+        protected void OnPropertyChanged([CallerMemberName] string name = null) =>
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
     }
 }

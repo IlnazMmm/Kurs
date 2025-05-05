@@ -18,6 +18,7 @@ namespace Kurs.Services
                 var empWorks = works.Where(w => w.EmployeeId == emp.Id).ToList();
                 decimal total = 0;
                 int totalDays = 0;
+                var details = new List<string>();
 
                 foreach (var work in empWorks)
                 {
@@ -27,13 +28,16 @@ namespace Kurs.Services
                     int days = (work.EndDate - work.StartDate).Days + 1;
                     totalDays += days;
                     total += CalculatePay(work, type);
+
+                    details.Add($"{type.Description}: {days} дн. × {type.RatePerDay}₽");
                 }
 
                 summaries.Add(new WorkSummary
                 {
                     Name = emp.FullName,
                     DaysWorked = totalDays,
-                    TotalPay = total
+                    TotalPay = total,
+                    WorkDetails = details
                 });
             }
 
@@ -45,7 +49,8 @@ namespace Kurs.Services
         public string Name { get; set; }
         public int DaysWorked { get; set; }
         public decimal TotalPay { get; set; }
-
-        public string Summary => $"Дней: {DaysWorked}, Доплата: {TotalPay}₽";
+        public List<string> WorkDetails { get; set; } = new();
+            
+        public string WorkDetailsString => string.Join(", ", WorkDetails);
     }
 }
