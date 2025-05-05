@@ -9,27 +9,29 @@
     </ContentPage.BindingContext>
 
     <VerticalStackLayout Padding="10" Spacing="10">
-        <Label Text="Сотрудники" />
+
+        <Label Text="Поиск сотрудников" />
+        <Entry Placeholder="Введите имя или фамилию"
+               Text="{Binding SearchQuery}" />
 
         <CollectionView ItemsSource="{Binding Employees}">
             <CollectionView.ItemTemplate>
                 <DataTemplate>
                     <Grid Padding="1" ColumnDefinitions="Auto,*" VerticalOptions="Center">
                         <CheckBox IsChecked="{Binding IsSelected, Mode=TwoWay}" 
-                              Color="DodgerBlue"
-                              VerticalOptions="Center" 
-                              Margin="10,0,0,0"
-                              HorizontalOptions="Center"/>
+                                  Color="DodgerBlue"
+                                  VerticalOptions="Center" 
+                                  Margin="10,0,0,0"
+                                  HorizontalOptions="Center"/>
                         <Label Grid.Column="1"
-                           Text="{Binding FullName}"
-                           FontSize="14"
-                           VerticalOptions="Center"
-                           Margin="5,0,0,0" />
+                               Text="{Binding FullName}"
+                               FontSize="14"
+                               VerticalOptions="Center"
+                               Margin="5,0,0,0" />
                     </Grid>
                 </DataTemplate>
             </CollectionView.ItemTemplate>
         </CollectionView>
-
 
         <Label Text="Вид работы" />
         <Picker ItemsSource="{Binding WorkTypes}"

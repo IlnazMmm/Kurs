@@ -15,9 +15,9 @@
         <Entry Text="{Binding SelectedEmployee.MiddleName}" Placeholder="Отчество" />
         <Entry Text="{Binding SelectedEmployee.Salary}" Placeholder="Оклад" Keyboard="Numeric"  TextChanged="OnSalaryTextChanged" />
         <Label Text="{Binding SalaryError}" TextColor="Red" FontSize="12" IsVisible="{Binding SalaryError, Converter={StaticResource StringNotEmptyConverter}}" />
-
+        <Entry Placeholder="Поиск по имени" Text="{Binding SearchQuery}" />
         <Button Text="Сохранить" Command="{Binding SaveCommand}" />
-
+        
         <ListView ItemsSource="{Binding Employees}" SelectionMode="None">
             <ListView.ItemTemplate>
                 <DataTemplate>

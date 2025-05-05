@@ -4,12 +4,14 @@ using Kurs.Models;
 using Kurs.Services;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
+using System.Linq;
 
 namespace Kurs.ViewModels
 {
     public class EmployeeViewModel : INotifyPropertyChanged
     {
         public ObservableCollection<Employee> Employees { get; set; } = new();
+        private List<Employee> _allEmployees = new(); // оригинальный список для фильтрации
 
         private Employee _selectedEmployee = new Employee();
         public Employee SelectedEmployee
@@ -21,6 +23,7 @@ namespace Kurs.ViewModels
                 OnPropertyChanged(nameof(SelectedEmployee));
             }
         }
+
         private string _salaryError;
         public string SalaryError
         {
@@ -31,6 +34,19 @@ namespace Kurs.ViewModels
                 OnPropertyChanged();
             }
         }
+
+        private string _searchQuery;
+        public string SearchQuery
+        {
+            get => _searchQuery;
+            set
+            {
+                _searchQuery = value;
+                OnPropertyChanged();
+                FilterEmployees();
+            }
+        }
+
         public ICommand SaveCommand { get; }
         public ICommand DeleteCommand { get; }
         public ICommand EditCommand { get; }
@@ -46,8 +62,20 @@ namespace Kurs.ViewModels
         public async Task LoadAsync()
         {
             var list = await App.Database.GetEmployeesAsync();
+            _allEmployees = list.ToList();
+            FilterEmployees();
+        }
+
+        private void FilterEmployees()
+        {
+            var filtered = string.IsNullOrWhiteSpace(SearchQuery)
+                ? _allEmployees
+                : _allEmployees.Where(e => e.FullName.Contains(SearchQuery, StringComparison.OrdinalIgnoreCase)).ToList();
+
+            var topThree = filtered.Take(3).ToList();
+
             Employees.Clear();
-            foreach (var e in list)
+            foreach (var e in topThree)
                 Employees.Add(e);
         }
 
@@ -101,5 +129,4 @@ namespace Kurs.ViewModels
         void OnPropertyChanged([CallerMemberName] string name = null) =>
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
     }
-
 }
