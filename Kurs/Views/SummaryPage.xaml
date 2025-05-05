@@ -10,10 +10,18 @@
 
     <VerticalStackLayout Padding="10">
         <Button Text="Загрузить отчет" Command="{Binding LoadCommand}" />
-        <ListView ItemsSource="{Binding Summary}">
+
+        <ListView ItemsSource="{Binding Summary}" HasUnevenRows="True">
             <ListView.ItemTemplate>
                 <DataTemplate>
-                    <TextCell Text="{Binding Name}" Detail="{Binding Summary}" />
+                    <ViewCell>
+                        <StackLayout Padding="10" Spacing="5">
+                            <Label Text="{Binding Name}" FontAttributes="Bold" FontSize="16"/>
+                            <Label Text="{Binding DaysWorked, StringFormat='Дней: {0}'}" />
+                            <Label Text="{Binding TotalPay, StringFormat='Доплата: {0}₽'}" />
+                            <Label Text="{Binding WorkDetailsString}" FontSize="12" TextColor="Gray" />
+                        </StackLayout>
+                    </ViewCell>
                 </DataTemplate>
             </ListView.ItemTemplate>
         </ListView>
