@@ -5,10 +5,10 @@
              Title="Главная">
 
     <VerticalStackLayout Padding="20" Spacing="10">
-        <Button Text="Сотрудники" Clicked="OnEmployeesClicked"/>
-        <Button Text="Виды работ" Clicked="OnWorkTypesClicked"/>
-        <Button Text="Назначить работу" Clicked="OnAssignmentsClicked"/>
-        <Button Text="Отчет" Clicked="OnSummaryClicked"/>
+        <Button x:Name="EmployeesButton" Text="Сотрудники" Clicked="OnEmployeesClicked"/>
+        <Button x:Name="WorkTypesButton" Text="Виды работ" Clicked="OnWorkTypesClicked"/>
+        <Button x:Name="AssignmentsButton" Text="Назначить работу" Clicked="OnAssignmentsClicked"/>
+        <Button x:Name="SummaryButton" Text="Отчет" Clicked="OnSummaryClicked"/>
     </VerticalStackLayout>
 
 </ContentPage>

@@ -1,4 +1,5 @@
-﻿using Kurs.Views;
+﻿using Kurs.Enums;
+using Kurs.Views;
 
 namespace Kurs
 {
@@ -9,6 +10,15 @@ namespace Kurs
             InitializeComponent();
         }
 
+        protected override void OnAppearing()
+        {
+            base.OnAppearing();
+
+            EmployeesButton.IsVisible = App.Auth.CanAccessFeature(AppFeature.ViewEmployees);
+            WorkTypesButton.IsVisible = App.Auth.CanAccessFeature(AppFeature.ViewWorkTypes);
+            AssignmentsButton.IsVisible = App.Auth.CanAccessFeature(AppFeature.AssignWork);
+            SummaryButton.IsVisible = App.Auth.CanAccessFeature(AppFeature.ViewReports);
+        }
         private async void OnEmployeesClicked(object sender, EventArgs e)
         {
             await Navigation.PushAsync(new EmployeePage());

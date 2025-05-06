@@ -16,6 +16,7 @@ namespace Kurs
             await _db.CreateTableAsync<Employee>();
             await _db.CreateTableAsync<WorkType>();
             await _db.CreateTableAsync<ExtraWork>();
+            await _db.CreateTableAsync<User>();
         }
 
         public Task<List<Employee>> GetEmployeesAsync() => _db.Table<Employee>().ToListAsync();
@@ -31,6 +32,31 @@ namespace Kurs
         public Task<int> DeleteWorkTypeAsync(WorkType type) => _db.DeleteAsync(type);
 
         public Task<int> AddExtraWorkAsync(ExtraWork work) => _db.InsertAsync(work);
+
+        public Task<int> AddUserAsync(User user) => _db.InsertAsync(user);
+        public Task<int> DeleteUserAsync(User user) => _db.DeleteAsync(user);
+        public Task<List<User>> GetUsersAsync() => _db.Table<User>().ToListAsync();
+        public Task<User> GetUserByUsernameAsync(string username)
+        {
+            return _db.Table<User>()
+                            .Where(u => u.Username == username)
+                            .FirstOrDefaultAsync();
+        }
+        public async Task<List<ExtraWork>> GetExtraWorkByEmployeeIdAsync(int employeeId)
+        {
+            return await _db.Table<ExtraWork>()
+                .Where(w => w.EmployeeId == employeeId)
+                .ToListAsync();
+        }
+        public async Task<User> GetUserAsync(string username, string password)
+        {
+            return await _db.Table<User>()
+                .Where(u => u.Username == username && u.Password == password)
+                .FirstOrDefaultAsync();
+        }
+
+
+
         //    public async Task<int> UpdateEmployeeAsync(Employee emp)
         //    {
         //        if (emp == null)

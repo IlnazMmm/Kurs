@@ -2,7 +2,6 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:viewModels="clr-namespace:Kurs.ViewModels"
              x:Class="Kurs.Views.EmployeePage"
-
              Title="Сотрудники">
 
     <ContentPage.BindingContext>
