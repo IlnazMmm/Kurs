@@ -67,7 +67,9 @@ namespace Kurs.ViewModels
             RateError = string.Empty;
 
             if (SelectedWorkType.Id == 0)
+            {
                 await App.Database.AddWorkTypeAsync(SelectedWorkType);
+            }
             else
                 await App.Database.UpdateWorkTypeAsync(SelectedWorkType);
 
@@ -87,7 +89,7 @@ namespace Kurs.ViewModels
 
         public async Task DeleteAsync(WorkType wt)
         {
-            await App.Database.DeleteWorkTypeAsync(wt);
+            await App.Database.DeleteWorkTypeWithAssignmentsAsync(wt.Id);
             await LoadAsync();
         }
 

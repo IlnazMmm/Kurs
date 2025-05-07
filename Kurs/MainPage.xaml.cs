@@ -38,5 +38,10 @@ namespace Kurs
         {
             await Navigation.PushAsync(new SummaryPage());
         }
+        private async void OnLogoutClicked(object sender, EventArgs e)
+        {
+            await App.Auth.LogoutAsync();
+            Application.Current.MainPage = new NavigationPage(new LoginPage());
+        }
     }
 }
