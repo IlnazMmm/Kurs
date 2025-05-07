@@ -1,0 +1,15 @@
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:viewModels="clr-namespace:Kurs.ViewModels"
+             x:Class="Kurs.Views.LoginPage"
+             Title="Вход">
+    <ContentPage.BindingContext>
+        <viewModels:LoginViewModel />
+    </ContentPage.BindingContext>
+
+    <VerticalStackLayout Padding="20">
+        <Entry Placeholder="Логин" Text="{Binding Username}" />
+        <Entry Placeholder="Пароль" IsPassword="True" Text="{Binding Password}" />
+        <Button Text="Войти" Command="{Binding LoginCommand}" />
+    </VerticalStackLayout>
+</ContentPage>

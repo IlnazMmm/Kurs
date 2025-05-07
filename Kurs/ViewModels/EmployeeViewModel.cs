@@ -5,6 +5,8 @@ using Kurs.Services;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using System.Linq;
+using System.Data;
+using Kurs.Enums;
 
 namespace Kurs.ViewModels
 {
@@ -94,9 +96,12 @@ namespace Kurs.ViewModels
 
             SalaryError = string.Empty;
 
+            User user = null;
+
             if (SelectedEmployee.Id == 0)
             {
                 await App.Database.AddEmployeeAsync(SelectedEmployee);
+                user = await App.Database.AddUserByEmployeeAsync(SelectedEmployee);
             }
             else
             {
@@ -105,6 +110,12 @@ namespace Kurs.ViewModels
 
             SelectedEmployee = new Employee();
             await LoadAsync();
+
+            if (user != null)
+            {
+                await Application.Current.MainPage.DisplayAlert("Пользователь создан",
+                    $"Логин для входа: {user.Username}\nПароль по умолчанию: 1234", "OK");
+            }
         }
 
         public void Edit(Employee emp)
@@ -121,7 +132,8 @@ namespace Kurs.ViewModels
 
         public async Task DeleteAsync(Employee emp)
         {
-            await App.Database.DeleteEmployeeAsync(emp);
+            await App.Database.DeleteEmployeeWithWorksAsync(emp.Id);
+            await App.Database.DeleteUserByEmployeeIdAsync(emp.Id);
             await LoadAsync();
         }
 

@@ -19,11 +19,29 @@ namespace Kurs.ViewModels
 
         private async Task LoadSummaryAsync()
         {
-            var works = await App.Database.GetExtraWorksAsync();
-            var types = await App.Database.GetWorkTypesAsync();
-            var employees = await App.Database.GetEmployeesAsync();
+            var auth = App.Auth;
 
-            var summaries = CalculationService.CalculateSummary(employees, works, types);
+            // Проверка на авторизованного пользователя и политику доступа
+            if (auth == null || auth.CurrentUser == null)
+                return;
+
+            var allowedIds = await auth.GetVisibleEmployeeIdsAsync();
+
+            // Грузим все нужные данные
+            var allWorks = await App.Database.GetExtraWorksAsync();
+            var allEmployees = await App.Database.GetEmployeesAsync();
+            var workTypes = await App.Database.GetWorkTypesAsync();
+
+            // Фильтрация по доступным сотрудникам
+            var visibleEmployees = allEmployees.Where(e => allowedIds.Contains(e.Id)).ToList();
+            var visibleWorks = allWorks.Where(w => allowedIds.Contains(w.EmployeeId)).ToList();
+
+
+            //var works = await App.Database.GetExtraWorksAsync();
+            //var types = await App.Database.GetWorkTypesAsync();
+            //var employees = await App.Database.GetEmployeesAsync();
+
+            var summaries = CalculationService.CalculateSummary(visibleEmployees, visibleWorks, workTypes);
 
             MainThread.BeginInvokeOnMainThread(() =>
             {
