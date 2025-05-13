@@ -33,6 +33,7 @@ namespace Kurs
 
         public Task<int> AddExtraWorkAsync(ExtraWork work) => _db.InsertAsync(work);
         public Task<int> DeleteExtraWorkAsync(ExtraWork work) => _db.DeleteAsync(work);
+        public Task<int> UpdateExtraWorkAsync(ExtraWork work) => _db.UpdateAsync(work);
         public Task<int> AddUserAsync(User user) => _db.InsertAsync(user);
 
         public async Task<User> AddUserByEmployeeAsync(Employee emp)

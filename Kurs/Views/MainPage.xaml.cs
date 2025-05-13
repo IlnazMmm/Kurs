@@ -1,7 +1,9 @@
 ﻿using Kurs.Enums;
+using Kurs.Services;
+using Kurs.Services.Alerts;
 using Kurs.Views;
 
-namespace Kurs
+namespace Kurs.Views
 {
     public partial class MainPage : ContentPage
     {

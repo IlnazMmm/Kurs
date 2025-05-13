@@ -61,12 +61,12 @@ namespace Kurs.ViewModels
                     EmployeeId = employee.Id,
                     WorkTypeId = SelectedWorkType.Id,
                     StartDate = StartDate,
-                    EndDate = EndDate
+                    EndDate = EndDate,
+                    CreatedByUserId = App.Auth.CurrentUser.Id
                 };
 
                 await App.Database.AddExtraWorkAsync(work);
             }
-
             await App.Current.MainPage.DisplayAlert("Готово", "Работа назначена для выбранных сотрудников", "OK");
         }
 
