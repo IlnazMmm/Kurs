@@ -1,15 +1,34 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<Shell
-    x:Class="Kurs.AppShell"
-    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
-    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-    xmlns:local="clr-namespace:Kurs.Views"
-    Shell.FlyoutBehavior="Flyout"
-    Title="Kurs">
+<Shell xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+       xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+       xmlns:views="clr-namespace:Kurs.Views"
+       x:Class="Kurs.AppShell"
+       Shell.FlyoutBehavior="Flyout"
 
-    <ShellContent
-        Title="Home"
-        ContentTemplate="{DataTemplate local:MainPage}"
-        Route="MainPage" />
+       FlyoutBackgroundColor="#f8f8f8">
 
+
+    <FlyoutItem Title="Главная" Route="MainPage">
+        <ShellContent ContentTemplate="{DataTemplate views:MainPage}" />
+    </FlyoutItem>
+
+    <FlyoutItem x:Name="EmployeesButton" Title="Сотрудники" Route="EmployeePage">
+        <ShellContent ContentTemplate="{DataTemplate views:EmployeePage}" />
+    </FlyoutItem>
+
+    <FlyoutItem x:Name="WorkTypesButton" Title="Виды работ" Route="WorkTypePage">
+        <ShellContent ContentTemplate="{DataTemplate views:WorkTypePage}" />
+    </FlyoutItem>
+
+    <FlyoutItem x:Name="AssignmentsButton" Title="Назначить работу" Route="WorkAssignmentPage">
+        <ShellContent ContentTemplate="{DataTemplate views:WorkAssignmentPage}" />
+    </FlyoutItem>
+
+    <FlyoutItem x:Name="ReportsButton" Title="Отчет" Route="SummaryPage">
+        <ShellContent ContentTemplate="{DataTemplate views:SummaryPage}" />
+    </FlyoutItem>
+
+
+    <MenuItem Text="Выйти"
+              Clicked="OnLogoutClicked"/>
 </Shell>

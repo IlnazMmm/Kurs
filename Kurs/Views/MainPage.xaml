@@ -2,15 +2,16 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:viewModels="clr-namespace:Kurs.ViewModels"
+             xmlns:microcharts="clr-namespace:Microcharts.Maui;assembly=Microcharts.Maui"
              x:Class="Kurs.Views.MainPage"
              Title="Главная">
 
     <ContentPage.BindingContext>
         <viewModels:MainPageViewModel />
     </ContentPage.BindingContext>
-
-    <VerticalStackLayout Padding="20" Spacing="10">
-        <HorizontalStackLayout HorizontalOptions="End" Padding="0,10">
+    <ScrollView>
+        <VerticalStackLayout Padding="20" Spacing="10">
+        <HorizontalStackLayout HorizontalOptions="End" Padding="0">
             <Grid>
                 <Image Source="bell.png"
                        WidthRequest="28"
@@ -37,11 +38,39 @@
                 </Frame>
             </Grid>
         </HorizontalStackLayout>
+        <VerticalStackLayout>
+            <Label Text="Здравствуйте," FontSize="20" TextColor="Gray"/>
+            <Label Text="{Binding UserName}" FontSize="26" FontAttributes="Bold"/>
+            <Label Text="{Binding CurrentDate}" FontSize="14" TextColor="DarkGray"/>
+        </VerticalStackLayout>
+        <!-- 📊 Карточки -->
+        <Grid ColumnDefinitions="*,*,*" ColumnSpacing="10">
+            <Frame BackgroundColor="#e0f7fa" Padding="10" CornerRadius="12" HasShadow="True" Grid.Column="0">
+                <Label Text="{Binding EmployeeCountText}" FontSize="16" HorizontalOptions="Center"/>
+            </Frame>
+            <Frame BackgroundColor="#fff3e0" Padding="10" CornerRadius="12" HasShadow="True" Grid.Column="1">
+                <Label Text="{Binding WorkCountText}" FontSize="16" HorizontalOptions="Center"/>
+            </Frame>
+            <Frame BackgroundColor="#e8f5e9" Padding="10" CornerRadius="12" HasShadow="True" Grid.Column="2">
+                <Label Text="{Binding ReportCountText}" FontSize="16" HorizontalOptions="Center"/>
+            </Frame>
+        </Grid>
+        <Frame CornerRadius="10" BackgroundColor="#ffffff" HasShadow="True" Padding="10">
+            <VerticalStackLayout>
+                <Label Text="Работы по типам" FontSize="18" FontAttributes="Bold" />
+                <microcharts:ChartView Chart="{Binding WorkChart}" HeightRequest="200"/>
+            </VerticalStackLayout>
+        </Frame>
+            <Frame CornerRadius="10" BackgroundColor="#ffffff" HasShadow="True" Padding="10">
+                <VerticalStackLayout Spacing="10">
+                    <Label Text="График по датам работ" FontSize="18" FontAttributes="Bold" />
 
-        <Button x:Name="EmployeesButton" Text="Сотрудники" Clicked="OnEmployeesClicked"/>
-        <Button x:Name="WorkTypesButton" Text="Виды работ" Clicked="OnWorkTypesClicked"/>
-        <Button x:Name="AssignmentsButton" Text="Назначить работу" Clicked="OnAssignmentsClicked"/>
-        <Button x:Name="SummaryButton" Text="Отчет" Clicked="OnSummaryClicked"/>
-        <Button Text="Выйти" Clicked="OnLogoutClicked" BackgroundColor="Crimson" TextColor="White"/>
-    </VerticalStackLayout>
+                    <Picker Title="Тип графика" ItemsSource="{Binding ChartTypes}" SelectedItem="{Binding SelectedChartType}" />
+
+                    <microcharts:ChartView Chart="{Binding DateChart}" HeightRequest="220" />
+                </VerticalStackLayout>
+            </Frame>
+
+        </VerticalStackLayout>
+    </ScrollView>
 </ContentPage>

@@ -8,65 +8,67 @@
         <viewModels:SummaryViewModel />
     </ContentPage.BindingContext>
 
-    <VerticalStackLayout Padding="10">
-        <Button Text="Загрузить отчет" Command="{Binding LoadCommand}" />
-        <Picker Title="Фильтр"
-            ItemsSource="{Binding Filters}"
-            SelectedItem="{Binding SelectedFilter}">
-            <Picker.ItemDisplayBinding>
-                <Binding Converter="{StaticResource ReportFilterDisplayConverter}" />
-            </Picker.ItemDisplayBinding>
-        </Picker>
-        <ListView ItemsSource="{Binding Summary}" HasUnevenRows="True">
-            <ListView.ItemTemplate>
-                <DataTemplate>
-                    <ViewCell>
-                        <Frame Padding="10" Margin="5"
-                           BackgroundColor="{Binding StatusColor}"
-                           BorderColor="DarkGray"
-                           CornerRadius="10">
-                            <VerticalStackLayout Spacing="5">
-                                <Label Text="{Binding Name}" FontAttributes="Bold" FontSize="16"/>
-                                <Label Text="{Binding DaysWorked, StringFormat='Дней: {0}'}" />
-                                <Label Text="{Binding TotalPay, StringFormat='Доплата: {0}₽'}" />
-                                <Label Text="{Binding DateRange}" FontSize="12"/>
-                                <Label Text="{Binding WorkDetailsString}" FontSize="12" TextColor="Gray"/>
-                                <Label Text="Причина отклонения:"
-                                       FontAttributes="Bold"
-                                       FontSize="12"
-                                       IsVisible="{Binding ShowRejectionComment}" />
+    <ScrollView>
+        <VerticalStackLayout Padding="10">
+            <Button Text="Загрузить отчет" Command="{Binding LoadCommand}" />
+            <Picker Title="Фильтр"
+                ItemsSource="{Binding Filters}"
+                SelectedItem="{Binding SelectedFilter}">
+                <Picker.ItemDisplayBinding>
+                    <Binding Converter="{StaticResource ReportFilterDisplayConverter}" />
+                </Picker.ItemDisplayBinding>
+            </Picker>
+            <ListView ItemsSource="{Binding Summary}" HasUnevenRows="True">
+                <ListView.ItemTemplate>
+                    <DataTemplate>
+                        <ViewCell>
+                            <Frame Padding="10" Margin="5"
+                               BackgroundColor="{Binding StatusColor}"
+                               BorderColor="DarkGray"
+                               CornerRadius="10">
+                                <VerticalStackLayout Spacing="5">
+                                    <Label Text="{Binding Name}" FontAttributes="Bold" FontSize="16"/>
+                                    <Label Text="{Binding DaysWorked, StringFormat='Дней: {0}'}" />
+                                    <Label Text="{Binding TotalPay, StringFormat='Доплата: {0}₽'}" />
+                                    <Label Text="{Binding DateRange}" FontSize="12"/>
+                                    <Label Text="{Binding WorkDetailsString}" FontSize="12" TextColor="Gray"/>
+                                    <Label Text="Причина отклонения:"
+                                           FontAttributes="Bold"
+                                           FontSize="12"
+                                           IsVisible="{Binding ShowRejectionComment}" />
 
-                                <Label Text="{Binding RejectionComment}"
-                                       FontSize="12"
-                                       TextColor="DarkRed"
-                                       IsVisible="{Binding ShowRejectionComment}" />
-                                <HorizontalStackLayout Spacing="10">
-                                    <Button Text="Взять в работу"
-                                        Command="{Binding BindingContext.TakeCommand, Source={RelativeSource AncestorType={x:Type ContentPage}}}"
-                                        CommandParameter="{Binding}"
-                                        IsVisible="{Binding ShowTakeButton}" />
+                                    <Label Text="{Binding RejectionComment}"
+                                           FontSize="12"
+                                           TextColor="DarkRed"
+                                           IsVisible="{Binding ShowRejectionComment}" />
+                                    <HorizontalStackLayout Spacing="10">
+                                        <Button Text="Взять в работу"
+                                            Command="{Binding BindingContext.TakeCommand, Source={RelativeSource AncestorType={x:Type ContentPage}}}"
+                                            CommandParameter="{Binding}"
+                                            IsVisible="{Binding ShowTakeButton}" />
 
-                                    <Button Text="Выполнено"    
-                                        Command="{Binding BindingContext.CompleteCommand, Source={RelativeSource AncestorType={x:Type ContentPage}}}"
-                                        CommandParameter="{Binding}"
-                                        IsVisible="{Binding ShowCompleteButton}" />
+                                        <Button Text="Выполнено"    
+                                            Command="{Binding BindingContext.CompleteCommand, Source={RelativeSource AncestorType={x:Type ContentPage}}}"
+                                            CommandParameter="{Binding}"
+                                            IsVisible="{Binding ShowCompleteButton}" />
 
-                                    <Button Text="Принять"
-                                        Command="{Binding BindingContext.ApproveCommand, Source={RelativeSource AncestorType={x:Type ContentPage}}}"
-                                        CommandParameter="{Binding}"
-                                        IsVisible="{Binding CanReview}" />
+                                        <Button Text="Принять"
+                                            Command="{Binding BindingContext.ApproveCommand, Source={RelativeSource AncestorType={x:Type ContentPage}}}"
+                                            CommandParameter="{Binding}"
+                                            IsVisible="{Binding CanReview}" />
 
-                                    <Button Text="Отклонить"
-                                        Command="{Binding BindingContext.RejectCommand, Source={RelativeSource AncestorType={x:Type ContentPage}}}"
-                                        CommandParameter="{Binding}"
-                                        IsVisible="{Binding CanReview}" />
-                                </HorizontalStackLayout>
-                            </VerticalStackLayout>
-                        </Frame>
-                    </ViewCell>
-                </DataTemplate>
-            </ListView.ItemTemplate>
-        </ListView>
+                                        <Button Text="Отклонить"
+                                            Command="{Binding BindingContext.RejectCommand, Source={RelativeSource AncestorType={x:Type ContentPage}}}"
+                                            CommandParameter="{Binding}"
+                                            IsVisible="{Binding CanReview}" />
+                                    </HorizontalStackLayout>
+                                </VerticalStackLayout>
+                            </Frame>
+                        </ViewCell>
+                    </DataTemplate>
+                </ListView.ItemTemplate>
+            </ListView>
 
-    </VerticalStackLayout>
+        </VerticalStackLayout>
+    </ScrollView>
 </ContentPage>

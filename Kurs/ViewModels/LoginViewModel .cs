@@ -25,7 +25,7 @@ namespace Kurs.ViewModels
             var success = await App.Auth.LoginAsync(Username, Password);
             if (success)
             {
-                App.Current.MainPage = new NavigationPage(new MainPage());
+                App.Current.MainPage = new AppShell();
                 //await Shell.Current.GoToAsync("//MainPage");
             }
             else
